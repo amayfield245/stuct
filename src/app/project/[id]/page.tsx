@@ -8,6 +8,7 @@ import HexMapView from '@/components/HexMapView'
 import AgentTreeView from '@/components/AgentTreeView'
 import ChatView from '@/components/ChatView'
 import UploadPanel from '@/components/UploadPanel'
+import WorkspaceView from '@/components/WorkspaceView'
 
 interface Project {
   id: string
@@ -24,14 +25,14 @@ interface Project {
   }
 }
 
-type ViewType = 'graph' | 'map' | 'agents' | 'chat'
+type ViewType = 'workspace' | 'graph' | 'map' | 'agents' | 'chat'
 
 export default function ProjectPage() {
   const params = useParams()
   const projectId = params.id as string
 
   const [project, setProject] = useState<Project | null>(null)
-  const [activeView, setActiveView] = useState<ViewType>('graph')
+  const [activeView, setActiveView] = useState<ViewType>('workspace')
   const [showUpload, setShowUpload] = useState(false)
   const [showChat, setShowChat] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -114,13 +115,6 @@ export default function ProjectPage() {
                 <span className="text-[#666666] text-sm ml-1">insights</span>
               </div>
             </div>
-            <Link
-              href="/"
-              className="px-4 py-2 rounded border border-[#CCCCCC] bg-white text-[#666666] hover:text-[#0033CC] hover:border-[#0033CC] transition-colors font-semibold text-sm tracking-wide"
-              title="Return to home"
-            >
-              HOME
-            </Link>
             <Link 
               href={`/settings?project=${project.id}`}
               className="text-[#666666] hover:text-[#0033CC] text-2xl transition-colors ml-4"
@@ -136,6 +130,7 @@ export default function ProjectPage() {
       <nav className="bg-white border-b border-[#CCCCCC]">
         <div className="flex">
           {[
+            { key: 'workspace', label: 'WORKSPACE' },
             { key: 'graph', label: 'GRAPH VIEW' },
             { key: 'map', label: 'GAME VIEW' },
             { key: 'agents', label: 'GEN-TIC VIEW' },
@@ -157,6 +152,7 @@ export default function ProjectPage() {
 
       {/* Main Content */}
       <div className="flex-1 relative overflow-hidden">
+        {activeView === 'workspace' && <WorkspaceView projectId={projectId} />}
         {activeView === 'graph' && <GraphView projectId={projectId} />}
         {activeView === 'map' && <HexMapView projectId={projectId} />}
         {activeView === 'agents' && <AgentTreeView projectId={projectId} />}

@@ -183,16 +183,7 @@ function SettingsContent() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="px-4 py-2 rounded border border-[#CCCCCC] bg-white text-[#666666] hover:text-[#0033CC] hover:border-[#0033CC] transition-colors font-semibold text-sm tracking-wide"
-              title="Return to home"
-            >
-              HOME
-            </Link>
-            <div className="text-2xl">⚙️</div>
-          </div>
+          <div className="text-2xl">⚙️</div>
         </div>
       </header>
 
@@ -365,7 +356,6 @@ function SettingsContent() {
                       type="checkbox"
                       checked={autoExtract}
                       onChange={(e) => setAutoExtract(e.target.checked)}
-                      aria-label="Auto extract on upload"
                       className="sr-only"
                     />
                     <div className={`w-11 h-6 rounded-full transition-colors ${

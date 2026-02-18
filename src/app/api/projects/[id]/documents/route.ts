@@ -8,6 +8,21 @@ import pdfParse from 'pdf-parse'
 // @ts-ignore
 import mammoth from 'mammoth'
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const documents = await prisma.document.findMany({
+      where: { projectId: params.id },
+      orderBy: { createdAt: 'desc' },
+    })
+    return NextResponse.json(documents)
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch documents' }, { status: 500 })
+  }
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
