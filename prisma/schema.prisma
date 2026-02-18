@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  documents   Document[]
+  entities    Entity[]
+  edges       Edge[]
+  territories Territory[]
+  agents      Agent[]
+  insights    Insight[]
+  chatMessages ChatMessage[]
+  settings    Settings?
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  projectId   String
+  filename    String
+  fileType    String
+  fileSize    Int
+  content     String   // extracted text content
+  status      String   @default("uploaded") // uploaded/processing/extracted/reviewed/failed
+  entityCount Int      @default(0)
+  edgeCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  entities Entity[]
+  edges    Edge[]
+}
+
+model Entity {
+  id           String  @id @default(cuid())
+  projectId    String
+  documentId   String? // optional relation to Document
+  name         String
+  type         String  // person/team/organisation/client/service/strategy/goal/financial/process/system/location/context/culture
+  subtype      String?
+  description  String?
+  metadata     String  @default("{}") // JSON string for flexible fields
+  confidence   Float   @default(1.0)
+  extractedBy  String?
+  reviewStatus String  @default("pending") // pending/approved/rejected
+  territoryId  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  document  Document?  @relation(fields: [documentId], references: [id])
+  territory Territory? @relation(fields: [territoryId], references: [id])
+  
+  // Self-referential relations for edges
+  sourceEdges Edge[] @relation("SourceEntity")
+  targetEdges Edge[] @relation("TargetEntity")
+}
+
+model Edge {
+  id         String   @id @default(cuid())
+  projectId  String
+  sourceId   String
+  targetId   String
+  label      String
+  weight     Int      @default(1)
+  documentId String?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  project  Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  source   Entity    @relation("SourceEntity", fields: [sourceId], references: [id], onDelete: Cascade)
+  target   Entity    @relation("TargetEntity", fields: [targetId], references: [id], onDelete: Cascade)
+  document Document? @relation(fields: [documentId], references: [id])
+}
+
+model Territory {
+  id           String   @id @default(cuid())
+  projectId    String
+  name         String
+  type         String
+  status       String   @default("known") // known/frontier/exploring
+  description  String?
+  hint         String?
+  risk         String?
+  value        String?
+  accessNeeded String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  entities Entity[]
+}
+
+model Agent {
+  id               String   @id @default(cuid())
+  projectId        String
+  name             String
+  role             String   // coordinator/explorer/scout
+  status           String   // active/complete/pending
+  domain           String?
+  description      String?
+  entitiesManaged  Int      @default(0)
+  parentAgentId    String?  // self-relation
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  parentAgent Agent?  @relation("AgentHierarchy", fields: [parentAgentId], references: [id])
+  childAgents Agent[] @relation("AgentHierarchy")
+}
+
+model Insight {
+  id                String   @id @default(cuid())
+  projectId         String
+  type              String   // inconsistency/gap/risk/opportunity/observation/culture
+  severity          String   // info/warning/critical
+  text              String
+  relatedEntityIds  String   @default("[]") // JSON array
+  acknowledged      Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id                   String   @id @default(cuid())
+  projectId            String
+  role                 String   // user/assistant
+  content              String
+  referencedEntityIds  String   @default("[]") // JSON array
+  createdAt            DateTime @default(now())
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  id              String   @id @default(cuid())
+  projectId       String   @unique
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  aiProvider      String   @default("claude")  // claude / ollama / none
+  claudeApiKey    String?                       // encrypted or plain for MVP
+  ollamaUrl       String   @default("http://localhost:11434")
+  ollamaModel     String   @default("llama3")
+  
+  autoExtract     Boolean  @default(true)
+  extractionDepth String   @default("deep")    // quick / deep
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

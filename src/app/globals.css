@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 0 0% 0%; /* #000000 */
+    --card: 0 0% 98%; /* #FAFAFA */
+    --card-foreground: 0 0% 20%; /* #333333 */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 225 100% 40%; /* #0033CC - blue */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%; /* #F5F5F5 */
+    --secondary-foreground: 0 0% 20%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%; /* #666666 */
+    --accent: 225 100% 40%; /* Same as primary - single accent color */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 80%; /* #CCCCCC */
+    --input: 0 0% 100%;
+    --ring: 225 100% 40%;
+    --radius: 0.5rem;
+    
+    /* Custom System Agent colors - clean minimal palette */
+    --blue: #0033CC;
+    --blue-light: #E6F0FF;
+    --gray-light: #CCCCCC;
+    --gray-medium: #666666;
+    --gray-dark: #333333;
+    --bg-white: #FFFFFF;
+    --bg-near-white: #FAFAFA;
+    --bg-light: #F5F5F5;
+    
+    /* Status colors */
+    --status-active: #0033CC;
+    --status-complete: #000000;
+    --status-pending: #CCCCCC;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    background: #FFFFFF;
+    color: #000000;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: #000000;
+  }
+}
+
+/* System Agent specific styles - clean and minimal */
+
+/* D3 specific styles */
+.node-label {
+  font-size: 11px;
+  fill: #000000;
+  pointer-events: none;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.edge-line {
+  stroke: #CCCCCC;
+  stroke-width: 1px;
+  stroke-opacity: 0.8;
+}
+
+.edge-label {
+  font-size: 9px;
+  fill: #666666;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.hex-label {
+  font-size: 11px;
+  fill: #000000;
+  text-anchor: middle;
+  pointer-events: none;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.hex-label-frontier {
+  font-size: 9px;
+  fill: #666666;
+  text-anchor: middle;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.hex-count {
+  font-size: 9px;
+  fill: #666666;
+  text-anchor: middle;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.agent-label {
+  font-size: 11px;
+  fill: #000000;
+  text-anchor: middle;
+  pointer-events: none;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.agent-role {
+  font-size: 9px;
+  fill: #666666;
+  text-anchor: middle;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.agent-status {
+  font-size: 9px;
+  text-anchor: middle;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.agent-status-active {
+  fill: #0033CC;
+}
+
+.agent-status-complete {
+  fill: #000000;
+}
+
+.agent-status-pending {
+  fill: #CCCCCC;
+}
+
+/* Scrollbar styling - clean and minimal */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CCCCCC;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0033CC;
+}
+
+/* Clean button and input styles */
+.btn-primary {
+  background-color: #0033CC;
+  color: #FFFFFF;
+  border: none;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #0029A3;
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #0033CC;
+  border: 2px solid #0033CC;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background-color: #E6F0FF;
+}
+
+/* Clean card styles */
+.card-clean {
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* Status indicators */
+.status-dot-active {
+  background-color: #0033CC;
+}
+
+.status-dot-complete {
+  background-color: #000000;
+}
+
+.status-dot-pending {
+  background-color: #CCCCCC;
+}
